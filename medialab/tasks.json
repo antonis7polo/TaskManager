@@ -2,7 +2,9 @@
   "title" : "New Task",
   "id" : "804a4c51-7c47-4b00-bd62-294413b66c79",
   "description" : "Description",
-  "category" : null,
+  "category" : {
+    "name" : "Cinema"
+  },
   "priority" : "Default",
   "deadline" : [ 2024, 12, 31 ],
   "status" : "DELAYED"
@@ -49,27 +51,9 @@
   "deadline" : [ 2024, 11, 22 ],
   "status" : "DELAYED"
 }, {
-  "title" : "Test for Delayed",
-  "id" : "35287210-7df7-493b-aeae-e4707de932a9",
-  "description" : "",
-  "category" : null,
-  "priority" : "Default",
-  "deadline" : [ 2025, 1, 8 ],
-  "status" : "IN_PROGRESS"
-}, {
-  "title" : "Test 3",
-  "id" : "4bcc327d-634a-4d7c-bee9-d3093554e590",
-  "description" : "",
-  "category" : {
-    "name" : "Business"
-  },
-  "priority" : "Default",
-  "deadline" : [ 2025, 1, 10 ],
-  "status" : "COMPLETED"
-}, {
   "title" : "Test for Notifications",
   "id" : "aaeb29ec-7a85-471a-b91e-ff49aaa1330e",
-  "description" : "",
+  "description" : "meow",
   "category" : {
     "name" : "Business"
   },
@@ -85,15 +69,15 @@
   },
   "priority" : "Default",
   "deadline" : [ 2025, 1, 23 ],
-  "status" : "OPEN"
+  "status" : "DELAYED"
 }, {
   "title" : "Test",
   "id" : "ce33129e-affd-4d0f-8115-d4948c6b3477",
-  "description" : "",
+  "description" : "wtf",
   "category" : {
     "name" : "Cinema"
   },
-  "priority" : "Default",
-  "deadline" : [ 2025, 1, 3 ],
-  "status" : "DELAYED"
+  "priority" : "Whatever",
+  "deadline" : [ 2025, 2, 8 ],
+  "status" : "IN_PROGRESS"
 } ]

@@ -30,21 +30,17 @@ public class ReminderManagementPane extends BorderPane {
         this.taskController = taskController;
         this.reminderList = FXCollections.observableArrayList(reminderController.getReminders());
 
-        // Create reminder table
         reminderTable = createReminderTable();
 
-        // Add buttons
         Button modifyReminderButton = new Button("Edit Reminder");
         modifyReminderButton.setOnAction(e -> modifySelectedReminder());
 
         Button deleteReminderButton = new Button("Delete Reminder");
         deleteReminderButton.setOnAction(e -> deleteSelectedReminder());
 
-        // Disable buttons by default until a selection is made
         modifyReminderButton.setDisable(true);
         deleteReminderButton.setDisable(true);
 
-        // Enable buttons when a selection is made
         reminderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             boolean disable = newSelection == null;
             modifyReminderButton.setDisable(disable);
@@ -54,8 +50,8 @@ public class ReminderManagementPane extends BorderPane {
         HBox buttonBar = new HBox(10, modifyReminderButton, deleteReminderButton);
         buttonBar.setPadding(new Insets(10));
 
-        setTop(buttonBar);  // Buttons at the top
-        setCenter(reminderTable);  // Table in center
+        setTop(buttonBar);  
+        setCenter(reminderTable);  
         
     }
 
@@ -257,7 +253,6 @@ public class ReminderManagementPane extends BorderPane {
         dialog.setTitle("Modify Reminder");
         dialog.setHeaderText("Edit the reminder details below for " + associatedTask.getTitle());
     
-        // ComboBox for Reminder Type
         ComboBox<String> reminderTypeComboBox = new ComboBox<>(FXCollections.observableArrayList(
                 "1 Day Before Deadline",
                 "1 Week Before Deadline",
@@ -266,16 +261,15 @@ public class ReminderManagementPane extends BorderPane {
         ));
         reminderTypeComboBox.setPromptText("Select Reminder Type");
     
-        // DatePicker for Custom Date
         DatePicker customDatePicker = new DatePicker(selectedReminder.getReminderDate());
         customDatePicker.setPromptText("Custom Reminder Date");
-        customDatePicker.setDisable(true);  // Initially disabled
+        customDatePicker.setDisable(true);  
     
-        // TextField for Description
+
         TextField descriptionField = new TextField(selectedReminder.getDescription());
         descriptionField.setPromptText("Reminder Description (Optional)");
     
-        // Enable DatePicker for Custom Date
+    
         reminderTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             customDatePicker.setDisable(!"Custom Date".equals(newVal));
         });
@@ -301,7 +295,6 @@ public class ReminderManagementPane extends BorderPane {
     
                 String description = descriptionField.getText().trim();
     
-                // Calculate the Reminder Date Based on Type
                 switch (reminderType) {
                     case "1 Day Before Deadline":
                         reminderDate[0] = associatedTask.getDeadline().minusDays(1);
@@ -320,13 +313,11 @@ public class ReminderManagementPane extends BorderPane {
                         return null;
                 }
     
-                // Ensure the Reminder Date is Valid
                 if (reminderDate[0] == null || reminderDate[0].isBefore(LocalDate.now())) {
                     showErrorAlert("Invalid Date", "Reminder date cannot be in the past.");
                     return null;
                 }
     
-                // Confirmation Alert
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("Modify Reminder Confirmation");
                 confirmation.setHeaderText("Are you sure you want to modify this reminder?");
@@ -336,14 +327,12 @@ public class ReminderManagementPane extends BorderPane {
     
                 Optional<ButtonType> result = confirmation.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    // Update the Reminder
                     selectedReminder.setReminderDate(reminderDate[0]);
                     selectedReminder.setDescription(description);
     
                     reminderList.setAll(reminderController.getReminders());
                     reminderTable.refresh();
     
-                    // Save Changes to JSON
                     reminderController.saveReminders("medialab/reminders.json");
     
                     showInformationAlert("Success", "Reminder modified successfully.");

@@ -11,6 +11,7 @@ import app.models.Task;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -32,6 +33,8 @@ public class MainContentPane extends BorderPane {
     private final SummaryPane summaryPane;
     private final ReminderController reminderController;
     private final ReminderManagementPane reminderManagementPane;
+    private final FilteredList<Task> filteredTasks;
+    
     
         public MainContentPane(TaskController taskController,CategoryController categoryController, PriorityController priorityController, SummaryPane summaryPane, ReminderController reminderController, ReminderManagementPane reminderManagementPane) {
             this.taskController = taskController;
@@ -41,17 +44,35 @@ public class MainContentPane extends BorderPane {
             this.taskList = FXCollections.observableArrayList(taskController.getTasks());
             this.priorityController = priorityController;
             this.reminderManagementPane = reminderManagementPane;
+            this.filteredTasks = new FilteredList<>(taskList, task -> true);
 
-        // Add Task Button
         Button addTaskButton = new Button("+ Add New Task");
         addTaskButton.setOnAction(e -> showAddTaskDialog(summaryPane));
 
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search tasks...");
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredTasks.setPredicate(task -> {
+                if (newValue == null || newValue.isBlank()) {
+                    return true; 
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+                boolean matchesTitle = task.getTitle().toLowerCase().contains(lowerCaseFilter);
+                boolean matchesCategory = task.getCategory() != null &&
+                        task.getCategory().getName().toLowerCase().contains(lowerCaseFilter);
+                boolean matchesPriority = task.getPriority().toLowerCase().contains(lowerCaseFilter);
+
+                return matchesTitle || matchesCategory || matchesPriority; 
+            });
+        });
         
         //Button addCategoryButton = new Button("+ Add Category");
         //addCategoryButton.setOnAction(e -> showAddCategoryDialog());
 
 
-        HBox header = new HBox(10, addTaskButton);
+        HBox header = new HBox(10, addTaskButton,searchField);
         header.setAlignment(Pos.CENTER_LEFT);
         header.setPadding(new Insets(10));
         header.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: #dddddd;");
@@ -62,7 +83,7 @@ public class MainContentPane extends BorderPane {
     }
 
     private TableView<Task> createTaskTable() {
-        TableView<Task> tableView = new TableView<>(taskList);
+        TableView<Task> tableView = new TableView<>(filteredTasks);
     
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy");
     
@@ -90,7 +111,12 @@ public class MainContentPane extends BorderPane {
                     setText(status);
                     if (status.equals(Task.Status.DELAYED.name())) {
                         setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                    } else {
+                    } else if(status.equals(Task.Status.COMPLETED.name())){
+                        setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                    } else if(status.equals(Task.Status.IN_PROGRESS.name())){
+                        setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+                    }
+                    else {
                         setStyle("");
                     }
                 }
@@ -111,8 +137,12 @@ public class MainContentPane extends BorderPane {
             }
         });
         categoryColumn.setPrefWidth(150);
+
+        TableColumn<Task, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescription()));
+        descriptionColumn.setPrefWidth(200);
     
-        tableView.getColumns().addAll(titleColumn, deadlineColumn, statusColumn, priorityColumn, categoryColumn);
+        tableView.getColumns().addAll(titleColumn, deadlineColumn, statusColumn, priorityColumn, categoryColumn,descriptionColumn);
     
         // Add double-click listener to rows
         tableView.setRowFactory(tv -> {

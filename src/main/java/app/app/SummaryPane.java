@@ -6,6 +6,7 @@ import app.models.Reminder;
 import app.models.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
@@ -13,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,8 +23,7 @@ public class SummaryPane extends HBox {
     private TaskController taskController;
     private ReminderController reminderController;
     private Label bellIcon;
-    private Popup notificationPopup;
-    private boolean isPopupVisible = false;
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy");
 
     public SummaryPane(TaskController taskController, ReminderController reminderController) {
         this.taskController = taskController;
@@ -40,15 +42,14 @@ public class SummaryPane extends HBox {
         );
         pillContainer.setSpacing(20);
 
-        // Bell Icon with Hover Effect
-        bellIcon = new Label("\uD83D\uDD14");  // Bell emoji
+        
+        bellIcon = new Label("\uD83D\uDD14");  
         bellIcon.setStyle("-fx-font-size: 30px; -fx-text-fill: green; -fx-cursor: hand;");
         Tooltip.install(bellIcon, new Tooltip("No reminders due today"));
 
         bellIcon.setOnMouseClicked(event -> toggleNotificationPopup());
 
-        notificationPopup = new Popup();
-
+        
         HBox.setHgrow(pillContainer, Priority.ALWAYS);
         getChildren().addAll(pillContainer, bellIcon);
 
@@ -108,65 +109,73 @@ public class SummaryPane extends HBox {
         }
     }
 
-    // Toggle the visibility of the notification popup
     private void toggleNotificationPopup() {
-        if (isPopupVisible) {
-            notificationPopup.hide();
-            isPopupVisible = false;
-        } else {
-            showNotificationPopup();
-        }
+        showPopup(); 
+    }
+    
+
+    private void showPopup() {
+    Stage popupStage = new Stage();
+    popupStage.setTitle("Today's Reminders");
+
+    // Root container for the popup window
+    VBox popupRoot = new VBox();
+    popupRoot.setPadding(new Insets(20));
+    popupRoot.setSpacing(15);
+    popupRoot.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #d1d1d1; " +
+            "-fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);");
+
+    
+    Label titleLabel = new Label("Reminders for Today");
+    titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+    popupRoot.getChildren().add(titleLabel);
+
+    
+    List<Reminder> remindersDueToday = reminderController.getReminders().stream()
+            .filter(reminder -> reminder.getReminderDate().equals(LocalDate.now()))
+            .toList();
+
+    if (remindersDueToday.isEmpty()) {
+        Label noReminderLabel = new Label("You have no reminders due today.");
+        noReminderLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #7a7a7a;");
+        popupRoot.getChildren().add(noReminderLabel);
+    } else {
+        remindersDueToday.forEach(reminder -> {
+            Task task = taskController.getTaskById(reminder.getTaskId());
+            String taskName = (task != null) ? task.getTitle() : "Unknown Task";
+
+            VBox reminderItem = new VBox();
+            reminderItem.setPadding(new Insets(10));
+            reminderItem.setSpacing(5);
+            reminderItem.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: #d1d1d1; -fx-border-radius: 5;");
+
+            Label taskLabel = new Label("Task: " + taskName);
+            taskLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+            Label dateLabel = new Label("Reminder Date: " + reminder.getReminderDate().format(dateFormatter));
+            dateLabel.setStyle("-fx-font-size: 14px;");
+
+            Label descriptionLabel = new Label("Description: " + reminder.getDescription());
+            descriptionLabel.setStyle("-fx-font-size: 14px;");
+
+            reminderItem.getChildren().addAll(taskLabel, dateLabel, descriptionLabel);
+            popupRoot.getChildren().add(reminderItem);
+        });
     }
 
-    private void showNotificationPopup() {
-        VBox notificationBox = new VBox();
-        notificationBox.setPadding(new Insets(20));
-        notificationBox.setSpacing(15);
-        notificationBox.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #d1d1d1; " +
-                "-fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);");
-        notificationBox.setMinWidth(1000);  // Wider width to prevent cramped look
     
-        List<Reminder> remindersDueToday = reminderController.getReminders().stream()
-                .filter(reminder -> reminder.getReminderDate().equals(LocalDate.now()))
-                .toList();
+    ScrollPane scrollPane = new ScrollPane(popupRoot);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setPrefWidth(550);
+    scrollPane.setPrefHeight(500);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
     
-        if (remindersDueToday.isEmpty()) {
-            Label noReminderLabel = new Label("No imminent reminders");
-            noReminderLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #7a7a7a;");
-            noReminderLabel.setWrapText(true);
-            noReminderLabel.setAlignment(Pos.CENTER);
-            notificationBox.getChildren().add(noReminderLabel);
-        } else {
-            remindersDueToday.forEach(reminder -> {
-                Task task = taskController.getTaskById(reminder.getTaskId());
-                String taskName = task != null ? task.getTitle() : "Unknown Task";
-    
-                VBox reminderItem = new VBox();
-                reminderItem.setPadding(new Insets(10));
-                reminderItem.setStyle("-fx-background-color: #f6f6f6; -fx-border-color: #d1d1d1; -fx-border-radius: 5;");
-                
-                Label reminderLabel = new Label("• " + taskName + "\n" + reminder.getDescription());
-                reminderLabel.setStyle("-fx-font-size: 15px;");
-                reminderLabel.setWrapText(true);
-                
-                reminderItem.getChildren().add(reminderLabel);
-                notificationBox.getChildren().add(reminderItem);
-            });
-        }
-    
-        ScrollPane scrollPane = new ScrollPane(notificationBox);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(Math.min(notificationBox.getChildren().size() * 75, 500));  // Dynamic height, max 500px
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    
-        notificationPopup.getContent().clear();
-        notificationPopup.getContent().add(scrollPane);
-    
-        // Position the popup properly under the bell icon
-        notificationPopup.show(bellIcon, bellIcon.localToScreen(0, bellIcon.getHeight()).getX() - 250,
-                bellIcon.localToScreen(0, bellIcon.getHeight()).getY() + 35);
-        isPopupVisible = true;
-    }
+    Scene popupScene = new Scene(scrollPane, 550, 600);
+    popupStage.setScene(popupScene);
+    popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL); 
+    popupStage.show();
+}
     
 }

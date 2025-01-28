@@ -35,6 +35,7 @@ public class Main extends Application {
         reminderController.loadReminders(REMINDERS_FILE);
 
         taskController.updateOverdueTasks();
+        reminderController.cleanExpiredReminders();
         System.out.println("Delayed Tasks Updated");
 
         /*long delayedTasks = taskController.getTasks().stream()

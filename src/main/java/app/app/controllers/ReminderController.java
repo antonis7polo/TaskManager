@@ -108,6 +108,23 @@ public class ReminderController {
                 .toList();
     }
 
+
+    public void cleanExpiredReminders() {
+        LocalDate today = LocalDate.now();
+    
+        List<Reminder> expiredReminders = reminders.stream()
+                .filter(reminder -> reminder.getReminderDate().isBefore(today))
+                .toList();
+    
+        if (!expiredReminders.isEmpty()) {
+            reminders.removeAll(expiredReminders);
+            System.out.println("Deleted expired reminders: " + expiredReminders.size());
+        } else {
+            System.out.println("No expired reminders to delete.");
+        }
+    }
+    
+
     public void printReminders() {
         reminders.forEach(System.out::println);
     }
