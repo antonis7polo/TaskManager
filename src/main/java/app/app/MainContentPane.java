@@ -186,14 +186,12 @@ public class MainContentPane extends BorderPane {
         Dialog<Task> dialog = new Dialog<>();
         dialog.setTitle("Edit Task");
     
-        // Form Fields
         TextField titleField = new TextField(task.getTitle());
         titleField.setPromptText("Title");
     
         TextArea descriptionField = new TextArea(task.getDescription());
         descriptionField.setPromptText("Description (Optional)");
     
-        // ComboBox for priorities
         ComboBox<String> priorityComboBox = new ComboBox<>();
         priorityComboBox.setPromptText("Select Priority");
         priorityComboBox.setItems(FXCollections.observableArrayList(
@@ -201,7 +199,6 @@ public class MainContentPane extends BorderPane {
         ));
         priorityComboBox.setValue(task.getPriority());
     
-        // DatePicker for deadline
         DatePicker deadlinePicker = new DatePicker(task.getDeadline());
         deadlinePicker.setPromptText("Select Deadline");
         deadlinePicker.setDayCellFactory(picker -> new DateCell() {
@@ -215,7 +212,6 @@ public class MainContentPane extends BorderPane {
             }
         });
     
-        // ComboBox for categories
         ComboBox<String> categoryComboBox = new ComboBox<>();
         categoryComboBox.setPromptText("Select Category");
         categoryComboBox.setItems(FXCollections.observableArrayList(
@@ -223,7 +219,6 @@ public class MainContentPane extends BorderPane {
         ));
         categoryComboBox.setValue(task.getCategory() != null ? task.getCategory().getName() : null);
     
-        // ComboBox for statuses
         ComboBox<Task.Status> statusComboBox = new ComboBox<>();
         statusComboBox.setPromptText("Select Status");
         statusComboBox.setItems(FXCollections.observableArrayList(
@@ -274,10 +269,9 @@ public class MainContentPane extends BorderPane {
     
         dialog.getDialogPane().setContent(dialogContent);
     
-        // Add dialog buttons
+    
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
     
-        // Handle dialog result
         dialog.setResultConverter(button -> {
             if (button == ButtonType.OK) {
                 if (titleField.getText().trim().isEmpty() ||
@@ -288,14 +282,14 @@ public class MainContentPane extends BorderPane {
                     return null;
                 }
     
-                // Get selected category
+        
                 String selectedCategoryName = categoryComboBox.getValue();
                 Category selectedCategory = categoryController.getCategories().stream()
                         .filter(category -> category.getName().equals(selectedCategoryName))
                         .findFirst()
                         .orElse(null);
     
-                // Update task
+            
                 task.setTitle(titleField.getText().trim());
                 task.setDescription(descriptionField.getText().trim());
                 task.setPriority(priorityComboBox.getValue());
@@ -383,11 +377,9 @@ public class MainContentPane extends BorderPane {
         customDatePicker.setPromptText("Custom Reminder Date");
         customDatePicker.setDisable(true);
     
-        // TextField for reminder description
         TextField descriptionField = new TextField();
         descriptionField.setPromptText("Reminder Description (Optional)");
     
-        // Enable custom date picker only for "Custom Date"
         reminderTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("Custom Date".equals(newVal)) {
                 customDatePicker.setDisable(false);
@@ -411,7 +403,6 @@ public class MainContentPane extends BorderPane {
             if (button == ButtonType.OK) {
                 String reminderType = reminderTypeComboBox.getValue();
     
-                // Check if reminderType is null
                 if (reminderType == null) {
                     showErrorAlert("Validation Error", "You must select a reminder type.");
                     return null;
@@ -442,7 +433,6 @@ public class MainContentPane extends BorderPane {
                     return null;
                 }
     
-                // Confirmation Alert
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("Set Reminder Confirmation");
                 confirmation.setHeaderText("Are you sure you want to set this reminder?");
@@ -455,7 +445,6 @@ public class MainContentPane extends BorderPane {
                         reminderController.addReminder(task.getId(), reminderDate[0], description);
                         reminderManagementPane.refreshReminderTable();
     
-                        // Inline information alert
                         Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
                         infoAlert.setTitle("Reminder Set");
                         infoAlert.setHeaderText(null);
@@ -478,14 +467,12 @@ public class MainContentPane extends BorderPane {
         Dialog<Task> dialog = new Dialog<>();
         dialog.setTitle("Add New Task");
     
-        // Form Fields
         TextField titleField = new TextField();
         titleField.setPromptText("Title");
     
         TextArea descriptionField = new TextArea();
         descriptionField.setPromptText("Description (Optional)");
     
-        // ComboBox for priorities
         ComboBox<String> priorityComboBox = new ComboBox<>();
         priorityComboBox.setPromptText("Select Priority");
         priorityComboBox.setItems(FXCollections.observableArrayList(
@@ -493,7 +480,6 @@ public class MainContentPane extends BorderPane {
         ));
         priorityComboBox.setValue("Default"); 
     
-        // DatePicker for deadline
         DatePicker deadlinePicker = new DatePicker();
         deadlinePicker.setPromptText("Select Deadline");
         deadlinePicker.setDayCellFactory(picker -> new DateCell() {
@@ -507,14 +493,12 @@ public class MainContentPane extends BorderPane {
             }
         });
     
-        // ComboBox for categories
         ComboBox<String> categoryComboBox = new ComboBox<>();
         categoryComboBox.setPromptText("Select Category");
         categoryComboBox.setItems(FXCollections.observableArrayList(
                 categoryController.getCategories().stream().map(Category::getName).toList()
         ));
     
-        // Layout for dialog
         VBox dialogContent = new VBox(10,
                 new Label("Title:"), titleField,
                 new Label("Description (Optional):"), descriptionField,
@@ -525,10 +509,8 @@ public class MainContentPane extends BorderPane {
     
         dialog.getDialogPane().setContent(dialogContent);
     
-        // Add dialog buttons
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
     
-        // Handle dialog result
         dialog.setResultConverter(button -> {
             if (button == ButtonType.OK) {
                 if (titleField.getText().trim().isEmpty() || 
@@ -538,14 +520,12 @@ public class MainContentPane extends BorderPane {
                     return null;
                 }
     
-                // Get selected category
                 String selectedCategoryName = categoryComboBox.getValue();
                 Category selectedCategory = categoryController.getCategories().stream()
                         .filter(category -> category.getName().equals(selectedCategoryName))
                         .findFirst()
                         .orElse(null);
     
-                // Create new task
                 Task newTask = new Task(
                         titleField.getText().trim(),
                         descriptionField.getText().trim(),
@@ -557,8 +537,6 @@ public class MainContentPane extends BorderPane {
     
                 taskController.addTask(newTask);
                 taskList.add(newTask);
-    
-                // Update summary pane
                 summaryPane.updateSummary();
     
                 return newTask;

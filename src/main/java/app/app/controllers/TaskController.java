@@ -53,22 +53,22 @@ public class TaskController {
         List<Task> tasksToRemove = new ArrayList<>();
         List<String> deletedTaskIds = new ArrayList<>();
     
-        // Collect tasks that belong to the category
+        
         tasks.forEach(task -> {
             if (task.getCategory() != null && task.getCategory().getName().equalsIgnoreCase(categoryName)) {
                 tasksToRemove.add(task);
             }
         });
     
-        // Call deleteTask for each task and store its ID
+        
         tasksToRemove.forEach(task -> {
             if (deleteTask(task.getId())) {
-                deletedTaskIds.add(task.getId()); // Store task ID for refreshing reminders
+                deletedTaskIds.add(task.getId()); 
             }
         });
     
         System.out.println("Tasks and associated reminders for category '" + categoryName + "' have been deleted.");
-        return deletedTaskIds; // Return deleted task IDs
+        return deletedTaskIds; 
     }
     
 

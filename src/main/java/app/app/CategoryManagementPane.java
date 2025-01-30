@@ -29,7 +29,6 @@ public class CategoryManagementPane extends BorderPane {
         this.reminderPane = reminderPane;
         TableView<Category> categoryTable = createCategoryTable();
 
-        // Add buttons
         Button addButton = new Button("+ Add Category");
         addButton.setOnAction(e -> showAddCategoryDialog());
 
@@ -42,7 +41,6 @@ public class CategoryManagementPane extends BorderPane {
         HBox buttonBar = new HBox(10, addButton, editButton, deleteButton);
         buttonBar.setPadding(new Insets(10));
 
-        // Layout
         setTop(buttonBar);
         setCenter(categoryTable);
     }
@@ -120,12 +118,11 @@ public class CategoryManagementPane extends BorderPane {
 
         confirmation.showAndWait().ifPresent(response -> {
         if (response == ButtonType.OK) {
-            List<String> deletedTaskIds = categoryController.deleteCategory(category.getName()); // Get deleted task IDs
+            List<String> deletedTaskIds = categoryController.deleteCategory(category.getName()); 
             
             if (deletedTaskIds.isEmpty()) {
                 showErrorAlert("Error", "Failed to delete category.");
             } else {
-                // Refresh reminders for each deleted task
                 deletedTaskIds.forEach(taskId -> reminderPane.refreshAfterTaskDeletion(taskId));
 
                 updateCategoryList();

@@ -29,19 +29,19 @@ public class SidebarPane extends VBox {
 
     private Label createStyledLabel(String text, Runnable onClick) {
         Label label = new Label(text);
-        label.setPrefWidth(200); // Set a fixed width to prevent resizing
+        label.setPrefWidth(200); 
         label.setStyle("-fx-text-fill: #333333; " +
                        "-fx-font-size: 14px; " +
-                       "-fx-padding: 10 20; " +  // Fixed padding
-                       "-fx-background-color: transparent;"); // Default background
+                       "-fx-padding: 10 20; " +  
+                       "-fx-background-color: transparent;"); 
         label.setOnMouseEntered(e -> label.setStyle("-fx-text-fill: #333333; " +
                                                     "-fx-font-size: 14px; " +
-                                                    "-fx-padding: 10 20; " + // Consistent padding
-                                                    "-fx-background-color: #e6e6e6;")); // Highlight background
+                                                    "-fx-padding: 10 20; " + 
+                                                    "-fx-background-color: #e6e6e6;")); 
         label.setOnMouseExited(e -> label.setStyle("-fx-text-fill: #333333; " +
                                                    "-fx-font-size: 14px; " +
-                                                   "-fx-padding: 10 20; " + // Consistent padding
-                                                   "-fx-background-color: transparent;")); // Default background
+                                                   "-fx-padding: 10 20; " + 
+                                                   "-fx-background-color: transparent;")); 
         label.setOnMouseClicked(e -> onClick.run());
         return label;
     }

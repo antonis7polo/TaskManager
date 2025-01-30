@@ -118,7 +118,6 @@ public class SummaryPane extends HBox {
     Stage popupStage = new Stage();
     popupStage.setTitle("Today's Reminders");
 
-    // Root container for the popup window
     VBox popupRoot = new VBox();
     popupRoot.setPadding(new Insets(20));
     popupRoot.setSpacing(15);

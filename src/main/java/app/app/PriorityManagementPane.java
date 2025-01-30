@@ -19,17 +19,14 @@ public class PriorityManagementPane extends BorderPane {
         this.priorityController = priorityController;
         this.mainContentPane = mainContentPane;
 
-        // Ensure "Default" priority always exists
         if (priorityController.getPriorities().stream().noneMatch(p -> p.getName().equalsIgnoreCase("Default"))) {
             priorityController.addPriority("Default");
         }
 
         this.priorityList = FXCollections.observableArrayList(priorityController.getPriorities());
 
-        // Create table for priorities
         TableView<Priority> priorityTable = createPriorityTable();
 
-        // Add buttons
         Button addButton = new Button("+ Add Priority");
         addButton.setOnAction(e -> showAddPriorityDialog());
 
@@ -39,7 +36,6 @@ public class PriorityManagementPane extends BorderPane {
         Button deleteButton = new Button("Delete Priority");
         deleteButton.setOnAction(e -> deleteSelectedPriority(priorityTable.getSelectionModel().getSelectedItem()));
 
-        // Disable Edit/Delete for "Default" priority
         priorityTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             System.out.println("Selected priority: " + (newSelection != null ? newSelection.getName() : "None"));
             if (newSelection != null && "Default".equalsIgnoreCase(newSelection.getName())) {
@@ -54,7 +50,6 @@ public class PriorityManagementPane extends BorderPane {
         HBox buttonBar = new HBox(10, addButton, editButton, deleteButton);
         buttonBar.setPadding(new Insets(10));
 
-        // Layout
         setTop(buttonBar);
         setCenter(priorityTable);
     }

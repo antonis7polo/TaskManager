@@ -73,7 +73,6 @@ public class Main extends Application {
     root.setLeft(sidebar);
     root.setCenter(taskPane);
 
-    // Scene setup
     Scene scene = new Scene(root, 1200, 800);
     primaryStage.setTitle("MediaLab Assistant");
     primaryStage.setScene(scene);

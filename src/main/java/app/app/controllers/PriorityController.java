@@ -14,7 +14,6 @@ public class PriorityController {
     public PriorityController(TaskController taskController) {
         this.taskController = taskController;
         this.priorities = new ArrayList<>();
-        // Ensure Default priority exists on initialization
         if (priorities.stream().noneMatch(p -> p.getName().equalsIgnoreCase("Default"))) {
             priorities.add(Priority.defaultPriority());
         }
@@ -23,14 +22,12 @@ public class PriorityController {
     public void loadPriorities(String filePath) {
         try {
             priorities = new ArrayList<>(JsonUtils.readJsonFile(filePath, Priority[].class));
-            // Ensure Default priority exists after loading
             if (priorities.stream().noneMatch(p -> p.getName().equalsIgnoreCase("Default"))) {
                 priorities.add(Priority.defaultPriority());
             }
             System.out.println("Priorities loaded successfully.");
         } catch (IOException e) {
             System.out.println("Failed to load priorities: " + e.getMessage());
-            // Ensure priorities list is initialized with Default
             priorities = new ArrayList<>();
             priorities.add(Priority.defaultPriority());
         }
@@ -45,12 +42,12 @@ public class PriorityController {
         }
     }
 
-    // Get all priorities
+    
     public List<Priority> getPriorities() {
-        return new ArrayList<>(priorities); // Return a copy to avoid external modification
+        return new ArrayList<>(priorities); 
     }
 
-    // Add a new priority
+    
     public boolean addPriority(String name) {
         if (priorities.stream().anyMatch(p -> p.getName().equalsIgnoreCase(name))) {
             System.out.println("Priority already exists.");
@@ -60,13 +57,13 @@ public class PriorityController {
         return true;
     }
 
-    // Modify a priority name
+    
     public boolean modifyPriority(String oldName, String newName) {
         for (Priority p : priorities) {
             if (p.getName().equalsIgnoreCase(oldName)) {
-                if (!"Default".equalsIgnoreCase(oldName)) { // Prevent modifying Default priority
+                if (!"Default".equalsIgnoreCase(oldName)) { 
                     p.setName(newName);
-                    taskController.updateTasksWithModifiedPriority(oldName, newName); // Update tasks
+                    taskController.updateTasksWithModifiedPriority(oldName, newName); 
                     return true;
                 } else {
                     System.out.println("Cannot modify the Default priority.");
@@ -78,7 +75,6 @@ public class PriorityController {
         return false;
     }
 
-    // Delete a priority and update associated tasks
     public boolean deletePriority(String name) {
         System.out.println("deleteSelectedPriority called"); 
         if ("Default".equalsIgnoreCase(name)) {

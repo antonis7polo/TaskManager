@@ -18,7 +18,7 @@ public class CategoryController {
 
     public void loadCategories(String filePath) {
         try {
-            categories = new ArrayList<>(JsonUtils.readJsonFile(filePath, Category[].class));  // Ensure modifiable list
+            categories = new ArrayList<>(JsonUtils.readJsonFile(filePath, Category[].class)); 
             System.out.println("Categories loaded successfully.");
         } catch (IOException e) {
             System.out.println("Failed to load categories: " + e.getMessage());
@@ -35,12 +35,10 @@ public class CategoryController {
         }
     }
 
-    // Get all categories
     public List<Category> getCategories() {
         return new ArrayList<>(categories);  
     }
 
-    // Add a new category
     public boolean addCategory(String name) {
         for (Category c : categories) {
             if (c.getName().equalsIgnoreCase(name)) {
@@ -52,7 +50,7 @@ public class CategoryController {
         return true;
     }
 
-    // Modify a category name
+    
     public boolean modifyCategory(String oldName, String newName) {
         for (Category c : categories) {
             if (c.getName().equalsIgnoreCase(oldName)) {
@@ -69,16 +67,16 @@ public class CategoryController {
     public List<String> deleteCategory(String name) {
         boolean removed = categories.removeIf(c -> c.getName().equalsIgnoreCase(name));
         if (removed) {
-            List<String> deletedTaskIds = taskController.deleteTasksByCategory(name); // Get deleted task IDs
+            List<String> deletedTaskIds = taskController.deleteTasksByCategory(name); 
             System.out.println("Category '" + name + "' and its associated tasks have been deleted.");
-            return deletedTaskIds; // Return the deleted task IDs
+            return deletedTaskIds; 
         } else {
             System.out.println("Category not found.");
-            return new ArrayList<>(); // Return empty list if nothing was deleted
+            return new ArrayList<>(); 
         }
     }
 
-    // Print all categories for testing
+
     public void printCategories() {
         categories.forEach(System.out::println);
     }

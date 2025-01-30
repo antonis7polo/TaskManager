@@ -11,7 +11,6 @@ public class JsonUtils {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
-        // Register the module to support Java 8 date/time types
         mapper.registerModule(new JavaTimeModule());
     }
 
