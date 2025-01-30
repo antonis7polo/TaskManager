@@ -49,30 +49,25 @@ public class MainContentPane extends BorderPane {
         Button addTaskButton = new Button("+ Add New Task");
         addTaskButton.setOnAction(e -> showAddTaskDialog(summaryPane));
 
+        TextField titleSearchField = new TextField();
+        titleSearchField.setPromptText("Search by Title");
 
-        TextField searchField = new TextField();
-        searchField.setPromptText("Search tasks...");
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredTasks.setPredicate(task -> {
-                if (newValue == null || newValue.isBlank()) {
-                    return true; 
-                }
+        TextField categorySearchField = new TextField();
+        categorySearchField.setPromptText("Search by Category");
 
-                String lowerCaseFilter = newValue.toLowerCase();
-                boolean matchesTitle = task.getTitle().toLowerCase().contains(lowerCaseFilter);
-                boolean matchesCategory = task.getCategory() != null &&
-                        task.getCategory().getName().toLowerCase().contains(lowerCaseFilter);
-                boolean matchesPriority = task.getPriority().toLowerCase().contains(lowerCaseFilter);
+        TextField prioritySearchField = new TextField();
+        prioritySearchField.setPromptText("Search by Priority");
 
-                return matchesTitle || matchesCategory || matchesPriority; 
-            });
-        });
+        titleSearchField.textProperty().addListener((obs, oldValue, newValue) -> filterTasks(titleSearchField, categorySearchField, prioritySearchField));
+        categorySearchField.textProperty().addListener((obs, oldValue, newValue) -> filterTasks(titleSearchField, categorySearchField, prioritySearchField));
+        prioritySearchField.textProperty().addListener((obs, oldValue, newValue) -> filterTasks(titleSearchField, categorySearchField, prioritySearchField));
+        
         
         //Button addCategoryButton = new Button("+ Add Category");
         //addCategoryButton.setOnAction(e -> showAddCategoryDialog());
 
 
-        HBox header = new HBox(10, addTaskButton,searchField);
+        HBox header = new HBox(10, addTaskButton, titleSearchField, categorySearchField, prioritySearchField);
         header.setAlignment(Pos.CENTER_LEFT);
         header.setPadding(new Insets(10));
         header.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: #dddddd;");
@@ -81,6 +76,24 @@ public class MainContentPane extends BorderPane {
         setTop(header);
         setCenter(taskTable);
     }
+
+
+    private void filterTasks(TextField titleField, TextField categoryField, TextField priorityField) {
+        String titleFilter = titleField.getText().toLowerCase().trim();
+        String categoryFilter = categoryField.getText().toLowerCase().trim();
+        String priorityFilter = priorityField.getText().toLowerCase().trim();
+
+        filteredTasks.setPredicate(task -> {
+            boolean matchesTitle = titleFilter.isEmpty() || task.getTitle().toLowerCase().contains(titleFilter);
+            boolean matchesCategory = categoryFilter.isEmpty() || 
+                    (task.getCategory() != null && task.getCategory().getName().toLowerCase().contains(categoryFilter));
+            boolean matchesPriority = priorityFilter.isEmpty() || task.getPriority().toLowerCase().contains(priorityFilter);
+
+            return matchesTitle && matchesCategory && matchesPriority;
+        });
+    }
+
+
 
     private TableView<Task> createTaskTable() {
         TableView<Task> tableView = new TableView<>(filteredTasks);
@@ -113,6 +126,10 @@ public class MainContentPane extends BorderPane {
                         setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
                     } else if(status.equals(Task.Status.COMPLETED.name())){
                         setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                    } else if(status.equals(Task.Status.POSTPONED.name())){
+                        setStyle("-fx-text-fill: blue; -fx-font-weight: bold;");
+                    } else if(status.equals(Task.Status.OPEN.name())){
+                        setStyle("-fx-text-fill: purple; -fx-font-weight: bold;");
                     } else if(status.equals(Task.Status.IN_PROGRESS.name())){
                         setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
                     }

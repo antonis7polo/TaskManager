@@ -1,18 +1,10 @@
 [ {
-  "title" : "New Task",
-  "id" : "804a4c51-7c47-4b00-bd62-294413b66c79",
-  "description" : "Description",
-  "category" : {
-    "name" : "Cinema"
-  },
-  "priority" : "Default",
-  "deadline" : [ 2024, 12, 31 ],
-  "status" : "DELAYED"
-}, {
   "title" : "New Task 2",
   "id" : "804a4c51-7c47-4b00-bd62-294413b66c78",
   "description" : "Description",
-  "category" : null,
+  "category" : {
+    "name" : "LALALA"
+  },
   "priority" : "Default",
   "deadline" : [ 2024, 12, 31 ],
   "status" : "DELAYED"
@@ -20,7 +12,9 @@
   "title" : "Task 3",
   "id" : "b37da652-c05e-4eee-bdcf-4cef04cabd91",
   "description" : "Meow",
-  "category" : null,
+  "category" : {
+    "name" : "LALALA"
+  },
   "priority" : "Default",
   "deadline" : [ 2024, 11, 10 ],
   "status" : "DELAYED"
@@ -28,56 +22,40 @@
   "title" : "Task 4",
   "id" : "f5056340-669c-46fa-ab3d-79b0e5d52e02",
   "description" : "meow",
-  "category" : null,
-  "priority" : "Default",
-  "deadline" : [ 2024, 11, 29 ],
-  "status" : "DELAYED"
-}, {
-  "title" : "reminder test",
-  "id" : "d21c09e2-ffae-4079-b2d2-9e0cd649d643",
-  "description" : "",
   "category" : {
-    "name" : "Cinema"
+    "name" : "LALALA"
   },
-  "priority" : "Default",
-  "deadline" : [ 2024, 12, 24 ],
+  "priority" : "Very Important",
+  "deadline" : [ 2024, 11, 29 ],
   "status" : "DELAYED"
 }, {
   "title" : "meow",
   "id" : "ec698d44-fdad-45c9-a09f-fb8c20d2d7f7",
   "description" : "",
-  "category" : null,
+  "category" : {
+    "name" : "LALALA"
+  },
   "priority" : "Default",
   "deadline" : [ 2024, 11, 22 ],
   "status" : "DELAYED"
 }, {
-  "title" : "Test for Notifications",
-  "id" : "aaeb29ec-7a85-471a-b91e-ff49aaa1330e",
-  "description" : "meow",
-  "category" : {
-    "name" : "Business"
-  },
-  "priority" : "Default",
-  "deadline" : [ 2025, 1, 1 ],
-  "status" : "DELAYED"
-}, {
-  "title" : "meow",
-  "id" : "42db82f3-a684-4eda-8887-50838988e46e",
+  "title" : "fwF",
+  "id" : "a5b24a74-9a9e-42ff-9661-418caf07083f",
   "description" : "",
   "category" : {
-    "name" : "Business"
+    "name" : "LALALA"
   },
   "priority" : "Default",
-  "deadline" : [ 2025, 1, 23 ],
-  "status" : "DELAYED"
+  "deadline" : [ 2025, 1, 30 ],
+  "status" : "COMPLETED"
 }, {
-  "title" : "Test",
-  "id" : "ce33129e-affd-4d0f-8115-d4948c6b3477",
-  "description" : "wtf",
+  "title" : "kjfqWKJ",
+  "id" : "bc44f55a-4f6c-44a0-a739-5e5c24f4a206",
+  "description" : "",
   "category" : {
-    "name" : "Cinema"
+    "name" : "neow"
   },
-  "priority" : "Whatever",
-  "deadline" : [ 2025, 2, 8 ],
-  "status" : "IN_PROGRESS"
+  "priority" : "Default",
+  "deadline" : [ 2025, 1, 30 ],
+  "status" : "OPEN"
 } ]

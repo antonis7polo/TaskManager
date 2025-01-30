@@ -65,16 +65,17 @@ public class CategoryController {
         return false;
     }
 
-    // Delete a category and its associated tasks
-    public boolean deleteCategory(String name) {
+    
+    public List<String> deleteCategory(String name) {
         boolean removed = categories.removeIf(c -> c.getName().equalsIgnoreCase(name));
         if (removed) {
-            taskController.deleteTasksByCategory(name);  // Delete tasks associated with the category
+            List<String> deletedTaskIds = taskController.deleteTasksByCategory(name); // Get deleted task IDs
             System.out.println("Category '" + name + "' and its associated tasks have been deleted.");
+            return deletedTaskIds; // Return the deleted task IDs
         } else {
             System.out.println("Category not found.");
+            return new ArrayList<>(); // Return empty list if nothing was deleted
         }
-        return removed;
     }
 
     // Print all categories for testing

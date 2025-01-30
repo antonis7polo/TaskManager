@@ -49,21 +49,28 @@ public class TaskController {
         });
     }
 
-    public void deleteTasksByCategory(String categoryName) {
+    public List<String> deleteTasksByCategory(String categoryName) {
         List<Task> tasksToRemove = new ArrayList<>();
+        List<String> deletedTaskIds = new ArrayList<>();
+    
+        // Collect tasks that belong to the category
         tasks.forEach(task -> {
             if (task.getCategory() != null && task.getCategory().getName().equalsIgnoreCase(categoryName)) {
                 tasksToRemove.add(task);
             }
         });
-
+    
+        // Call deleteTask for each task and store its ID
         tasksToRemove.forEach(task -> {
-            tasks.remove(task);
-            reminderController.deleteRemindersForTask(task.getId());
+            if (deleteTask(task.getId())) {
+                deletedTaskIds.add(task.getId()); // Store task ID for refreshing reminders
+            }
         });
-
+    
         System.out.println("Tasks and associated reminders for category '" + categoryName + "' have been deleted.");
+        return deletedTaskIds; // Return deleted task IDs
     }
+    
 
     public boolean deleteTask(String taskId) {
         Task task = getTaskById(taskId);

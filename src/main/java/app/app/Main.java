@@ -52,7 +52,7 @@ public class Main extends Application {
         ReminderManagementPane reminderPane = new ReminderManagementPane(reminderController, taskController);
     
     MainContentPane taskPane = new MainContentPane(taskController, categoryController,priorityController, summaryPane,reminderController,reminderPane);
-    CategoryManagementPane categoryPane = new CategoryManagementPane(categoryController, taskController, summaryPane) {
+    CategoryManagementPane categoryPane = new CategoryManagementPane(categoryController, taskController, summaryPane,reminderPane) {
         @Override
                 public void refreshTaskTable() {
                     taskPane.refreshTaskTable();

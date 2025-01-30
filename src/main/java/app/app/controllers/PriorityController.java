@@ -88,7 +88,7 @@ public class PriorityController {
 
         boolean removed = priorities.removeIf(p -> p.getName().equalsIgnoreCase(name));
         if (removed) {
-            taskController.updateTasksWithDeletedPriority(name); // Update tasks to Default priority
+            taskController.updateTasksWithDeletedPriority(name); 
             System.out.println("Priority '" + name + "' deleted. Associated tasks updated to 'Default'.");
         } else {
             System.out.println("Priority not found.");

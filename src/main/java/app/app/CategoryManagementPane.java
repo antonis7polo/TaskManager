@@ -7,6 +7,9 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.List;
+
 import app.controllers.*;
 import app.models.*;
 
@@ -16,13 +19,14 @@ public class CategoryManagementPane extends BorderPane {
     private final TaskController taskController;
     private final ObservableList<Category> categoryList;
     private final SummaryPane summaryPane;
+    private final ReminderManagementPane reminderPane;
 
-    public CategoryManagementPane(CategoryController categoryController, TaskController taskController,SummaryPane summaryPane) {
+    public CategoryManagementPane(CategoryController categoryController, TaskController taskController,SummaryPane summaryPane,ReminderManagementPane reminderPane) {
         this.categoryController = categoryController;
         this.taskController = taskController;
         this.categoryList = FXCollections.observableArrayList(categoryController.getCategories());
         this.summaryPane = summaryPane;
-        // Create table for categories
+        this.reminderPane = reminderPane;
         TableView<Category> categoryTable = createCategoryTable();
 
         // Add buttons
@@ -115,17 +119,22 @@ public class CategoryManagementPane extends BorderPane {
         confirmation.setContentText("This will delete all associated tasks and reminders.");
 
         confirmation.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                if (!categoryController.deleteCategory(category.getName())) {
-                    showErrorAlert("Error", "Failed to delete category.");
-                } else {
-                    updateCategoryList();
-                    refreshTaskTable(); 
-                    summaryPane.updateSummary();
-                }
+        if (response == ButtonType.OK) {
+            List<String> deletedTaskIds = categoryController.deleteCategory(category.getName()); // Get deleted task IDs
+            
+            if (deletedTaskIds.isEmpty()) {
+                showErrorAlert("Error", "Failed to delete category.");
+            } else {
+                // Refresh reminders for each deleted task
+                deletedTaskIds.forEach(taskId -> reminderPane.refreshAfterTaskDeletion(taskId));
+
+                updateCategoryList();
+                refreshTaskTable();
+                summaryPane.updateSummary();
             }
-        });
-    }
+        }
+    });
+}
 
     public void refreshTaskTable() {
     }
