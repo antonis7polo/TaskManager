@@ -115,6 +115,7 @@ public class PriorityManagementPane extends BorderPane {
                 showErrorAlert("Error", "Failed to rename priority.");
             } else {
                 updatePriorityList(); 
+                mainContentPane.refreshTaskTable();
             }
         });
     }
@@ -147,6 +148,10 @@ public class PriorityManagementPane extends BorderPane {
             }
         });
     }
+
+    public void refreshTaskTable() {
+    }
+
 
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

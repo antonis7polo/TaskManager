@@ -136,6 +136,7 @@ public class CategoryManagementPane extends BorderPane {
     public void refreshTaskTable() {
     }
 
+
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

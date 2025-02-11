@@ -13,6 +13,10 @@ import java.util.List;
 /**
  * Controller for managing reminders associated with tasks.
  * Provides methods for loading, saving, adding, modifying, and deleting reminders.
+ * 
+ * @author Antonis Alexiadis
+ * @version 1.0
+ * @see app.controllers.TaskController
  */
 
 public class ReminderController {
