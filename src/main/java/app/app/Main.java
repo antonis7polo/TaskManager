@@ -38,13 +38,13 @@ public class Main extends Application {
         reminderController.cleanExpiredReminders();
         System.out.println("Delayed Tasks Updated");
 
-        /*long delayedTasks = taskController.getTasks().stream()
+        long delayedTasks = taskController.getTasks().stream()
                 .filter(task -> task.getStatus() == Task.Status.DELAYED)
                 .count();
 
         if (delayedTasks > 0) {
             showPopup("You have " + delayedTasks + " overdue tasks.");
-        }*/
+        }
 
         BorderPane root = new BorderPane();
 
